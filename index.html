@@ -1,67 +1,87 @@
-<!-- Leaflet CSS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
-<!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>NearBuild - Hire Local Construction Workers</title>
+  <title>NearBuild Map with Filters</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    #map {
+      height: 500px;
+      width: 90%;
+      margin: 20px auto;
+    }
+    select {
+      padding: 10px;
+      margin: 10px;
+      font-size: 16px;
+    }
+  </style>
 </head>
 <body>
-  <h1>Welcome to NearBuild!</h1>
-  <p>Find & Hire Local Construction Workers Easily.</p>
-<h2>Project Locations Map:</h2>
-<div id="map" style="height: 400px;"></div>
-<script>
-  // ساخت نقشه
-  var map = L.map('map').setView([34.0522, -118.2437], 10); // موقعیت اولیه (لس‌آنجلس)
+  <h1>NearBuild - Find Workers Nearby</h1>
 
-  // بارگذاری لایه نقشه
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
-  }).addTo(map);
+  <!-- Filter Dropdown -->
+  <label for="filter">Filter by Worker Type:</label>
+  <select id="filter">
+    <option value="All">All</option>
+    <option value="Welder">Welder</option>
+    <option value="Concrete Worker">Concrete Worker</option>
+    <option value="Crane Operator">Crane Operator</option>
+  </select>
 
-  // اضافه کردن یک Marker (نقطه) نمونه
-var marker = L.marker([34.0522, -118.2437], { draggable: true }).addTo(map);
-marker.bindPopup('Drag me!').openPopup();
-marker.on('dragend', function (e) {
-  var position = marker.getLatLng();
-  console.log(position);
-  alert("New Location: " + position.lat + ", " + position.lng);
-});
-</script>
+  <!-- Map -->
+  <div id="map"></div>
 
-<h2>Post a Project:</h2>
-<form>
-  <label>Project Title:</label><br>
-  <input type="text" placeholder="e.g. Home Renovation"><br><br>
-  
-  <label>Project Description:</label><br>
-  <textarea placeholder="Describe the work needed..."></textarea><br><br>
-  
-  <label>Your Neighborhood or ZIP Code:</label><br>
-  <input type="text" placeholder="e.g. 90210"><br><br>
-  
-  <button type="submit">Submit Project</button>
-</form>
+  <script>
+    // Initialize the map
+    var map = L.map('map').setView([34.0522, -118.2437], 12); // Los Angeles center
 
-<h2>Register as a Worker:</h2>
-<form>
-  <label>Your Name:</label><br>
-  <input type="text" placeholder="e.g. John Doe"><br><br>
-  
-  <label>Skill or Profession:</label><br>
-  <input type="text" placeholder="e.g. Plumber, Electrician"><br><br>
-  
-  <label>Your Phone Number:</label><br>
-  <input type="text" placeholder="e.g. 555-1234"><br><br>
-  
-  <label>Your ZIP Code or Neighborhood:</label><br>
-  <input type="text" placeholder="e.g. 90210"><br><br>
-  
-  <button type="submit">Register</button>
-</form>
-<a href="projects.html">View Active Projects</a>
+    // Load map tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Sample workers data
+    var workers = [
+      { type: "Welder", lat: 34.0522, lng: -118.2437 },
+      { type: "Concrete Worker", lat: 34.0600, lng: -118.2500 },
+      { type: "Crane Operator", lat: 34.0400, lng: -118.2700 },
+      { type: "Welder", lat: 34.0650, lng: -118.2600 },
+      { type: "Concrete Worker", lat: 34.0750, lng: -118.2400 }
+    ];
+
+    // Add markers to the map
+    var markers = [];
+
+    workers.forEach(function(worker) {
+      var marker = L.marker([worker.lat, worker.lng])
+        .bindPopup(worker.type)
+        .addTo(map);
+      marker.type = worker.type; // Save worker type inside marker
+      markers.push(marker);
+    });
+
+    // Filter functionality
+    document.getElementById("filter").addEventListener("change", function() {
+      var selected = this.value;
+      markers.forEach(function(marker) {
+        if (selected === "All" || marker.type === selected) {
+          marker.addTo(map);
+        } else {
+          map.removeLayer(marker);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
