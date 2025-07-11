@@ -25,9 +25,13 @@
   }).addTo(map);
 
   // اضافه کردن یک Marker (نقطه) نمونه
-  L.marker([34.0522, -118.2437]).addTo(map)
-    .bindPopup('Sample Project Location')
-    .openPopup();
+var marker = L.marker([34.0522, -118.2437], { draggable: true }).addTo(map);
+marker.bindPopup('Drag me!').openPopup();
+marker.on('dragend', function (e) {
+  var position = marker.getLatLng();
+  console.log(position);
+  alert("New Location: " + position.lat + ", " + position.lng);
+});
 </script>
 
 <h2>Post a Project:</h2>
