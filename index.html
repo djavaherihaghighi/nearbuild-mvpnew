@@ -1,3 +1,9 @@
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +13,22 @@
 <body>
   <h1>Welcome to NearBuild!</h1>
   <p>Find & Hire Local Construction Workers Easily.</p>
+<h2>Project Locations Map:</h2>
+<div id="map" style="height: 400px;"></div>
+<script>
+  // ساخت نقشه
+  var map = L.map('map').setView([34.0522, -118.2437], 10); // موقعیت اولیه (لس‌آنجلس)
+
+  // بارگذاری لایه نقشه
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+
+  // اضافه کردن یک Marker (نقطه) نمونه
+  L.marker([34.0522, -118.2437]).addTo(map)
+    .bindPopup('Sample Project Location')
+    .openPopup();
+</script>
 
 <h2>Post a Project:</h2>
 <form>
